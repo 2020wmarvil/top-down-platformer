@@ -28,8 +28,11 @@ int main(int argc, char** argv){
 	SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
 
 	SDL_Event event;
-	while(event.type != SDL_KEYDOWN && event.type != SDL_QUIT) {
-		SDL_PollEvent(&event);
+	bool quit=false;
+	while (!quit){
+		while (SDL_PollEvent(&event)){
+			if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN) quit = true;
+		}
 
 		SDL_SetRenderDrawColor(ren, 50, 50, 100, 255);
 		SDL_RenderClear(ren);
@@ -40,7 +43,8 @@ int main(int argc, char** argv){
 			}
 		}
 		
-		renderTexture(player, ren, x_offset + (viewport_size / 2) - (tile_width / 2), y_offset + (viewport_size / 2) - (tile_width / 2));
+		renderTexture(player, ren, x_offset + (viewport_size / 2) - (tile_width / 2), 
+					   y_offset + (viewport_size / 2) - (tile_width / 2));
 		
 		SDL_RenderPresent(ren);
 	}
