@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.1)
+
+project(Top_Down_Platformer VERSION 1.0 DESCRIPTION "Top Down Platformer" LANGUAGES CXX)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${Top_Down_Platformer_SOURCE_DIR}/cmake")
+set(BIN_DIR "${Top_Down_Platformer_SOURCE_DIR}/bin")
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++11")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG} -g")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE} -O2")
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+	if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+	endif()
+endif()
+
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
+
+set(SOURCE_FILES src/platformy.cpp )
+add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARY})
+install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION ${BIN_DIR})

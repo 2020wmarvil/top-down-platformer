@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include <SDL2/SDL.h>
+//#include <SDL_image.h>
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
@@ -21,8 +23,9 @@ int main(int argc, char** argv){
 
 	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	SDL_Texture *background = loadTexture("assets/default_tile.bmp", ren);
-	SDL_Texture *player = loadTexture("assets/npc.bmp", ren);
+	SDL_Texture *background = loadTexture("../assets/default_tile.bmp", ren);
+	SDL_Texture *player = loadTexture("../assets/npc.bmp", ren);
+	SDL_Texture *spritesheet = loadTexture("../assets/npc_spritesheet.bmp", ren);
 
 	int bW, bH;
 	SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
@@ -43,7 +46,7 @@ int main(int argc, char** argv){
 			}
 		}
 		
-		renderTexture(player, ren, x_offset + (viewport_size / 2) - (tile_width / 2), 
+		renderTexture(spritesheet, ren, x_offset + (viewport_size / 2) - (tile_width / 2), 
 					   y_offset + (viewport_size / 2) - (tile_width / 2));
 		
 		SDL_RenderPresent(ren);
