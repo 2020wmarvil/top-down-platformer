@@ -15,7 +15,7 @@ const int win_flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MOUSE
 const std::string resource_path = getResourcePath();
 
 SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren);
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y);
+void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *clip=nullptr);
 void updateDisplay(SDL_Window* win);
 
 int main(int argc, char** argv){
@@ -50,8 +50,15 @@ int main(int argc, char** argv){
 			}
 		}
 		
+		int sprite = 0, sprite_size = 16;
+		int sprite_cols = 4, sprite_rows = 4;
+		SDL_Rect player_clip;
+		player_clip.x = (sprite % sprite_cols) * sprite_size;
+		player_clip.y = (sprite / sprite_rows) * sprite_size;
+		player_clip.w = sprite_size; player_clip.h = sprite_size;
+
 		renderTexture(spritesheet, ren, x_offset + (viewport_size / 2) - (tile_width / 2), 
-					   y_offset + (viewport_size / 2) - (tile_width / 2));
+					   y_offset + (viewport_size / 2) - (tile_width / 2), &player_clip);
 		
 		SDL_RenderPresent(ren);
 	}
@@ -67,14 +74,14 @@ SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren) {
 	return texture;
 }
 
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y) {
+void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *clip) {
 	SDL_Rect dst;
 	dst.x = x; dst.y = y;
 
 	dst.w = tile_width;
 	dst.h = tile_width;
 
-	SDL_RenderCopy(ren, tex, NULL, &dst);
+	SDL_RenderCopy(ren, tex, clip, &dst);
 }
 
 void updateDisplay(SDL_Window* win) {
