@@ -4,6 +4,7 @@ project(Top_Down_Platformer VERSION 1.0 DESCRIPTION "Top Down Platformer" LANGUA
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${Top_Down_Platformer_SOURCE_DIR}/cmake")
 set(BIN_DIR "${Top_Down_Platformer_SOURCE_DIR}/bin")
+set(SOURCE_FILES src/platformy.cpp )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++11")
@@ -17,12 +18,14 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 	endif()
 endif()
 
-SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
+find_package(SDL2_image REQUIRED)
 
-set(SOURCE_FILES src/platformy.cpp )
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} include)
+
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARY})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY})
+
 install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION ${BIN_DIR})

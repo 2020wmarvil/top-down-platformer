@@ -1,7 +1,9 @@
 #include <iostream>
 
 #include <SDL2/SDL.h>
-//#include <SDL_image.h>
+#include <SDL_image.h>
+
+#include "res_path.h"
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
@@ -10,12 +12,15 @@ int tile_width, viewport_size, x_offset, y_offset;
 
 const int win_flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MOUSE_CAPTURE;
 
+const std::string resource_path = getResourcePath();
+
 SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren);
 void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y);
 void updateDisplay(SDL_Window* win);
 
 int main(int argc, char** argv){
 	SDL_Init(SDL_INIT_VIDEO);
+	IMG_Init(IMG_INIT_PNG);
 
 	SDL_Window *win = SDL_CreateWindow("Platformy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, win_flags);
 
@@ -23,9 +28,8 @@ int main(int argc, char** argv){
 
 	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	SDL_Texture *background = loadTexture("../assets/default_tile.bmp", ren);
-	SDL_Texture *player = loadTexture("../assets/npc.bmp", ren);
-	SDL_Texture *spritesheet = loadTexture("../assets/npc_spritesheet.bmp", ren);
+	SDL_Texture *background = loadTexture(resource_path + "default_tile.png", ren);
+	SDL_Texture *spritesheet = loadTexture(resource_path + "npc_spritesheet.png", ren);	
 
 	int bW, bH;
 	SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
@@ -57,12 +61,8 @@ int main(int argc, char** argv){
 	return 0;
 }
 
-
 SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren) {
-	SDL_Texture *texture = nullptr;
-	SDL_Surface *loadedImage = SDL_LoadBMP(file.c_str());
-
-	texture = SDL_CreateTextureFromSurface(ren, loadedImage);
+	SDL_Texture *texture = IMG_LoadTexture(ren, file.c_str());
 
 	return texture;
 }
