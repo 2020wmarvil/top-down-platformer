@@ -6,11 +6,13 @@
 #include "res_path.h"
 #include "event_handler.h"
 #include "player.h"
+#include "tile.h"
+
+#define VIEWPORT_TILES 11
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 bool exit_game_loop = false;
 
-const int viewport_tiles = 11;
 int tile_width, viewport_size, x_offset, y_offset;
 
 const int win_flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MOUSE_CAPTURE;
@@ -31,9 +33,20 @@ int main(int argc, char** argv){
 
 	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	SDL_Texture *grass = loadTexture(resource_path + "grass_tile.png", ren);
-	SDL_Texture *cobble = loadTexture(resource_path + "cobble_tile.png", ren);
-	SDL_Texture *spritesheet = loadTexture(resource_path + "npc_spritesheet.png", ren);	
+	SDL_Texture *tile_textures[] = { 
+		loadTexture(resource_path + "grass_tile.png", ren),
+		loadTexture(resource_path + "sand_tile.png", ren),
+		loadTexture(resource_path + "cobble_tile.png", ren)
+	};
+
+	SDL_Texture *spritesheet = loadTexture(resource_path + "npc_spritesheet.png", ren);
+
+	Tile *tiles[VIEWPORT_TILES][VIEWPORT_TILES];
+	for (int c=0; c<VIEWPORT_TILES; c++) {
+		for (int r=0; r<VIEWPORT_TILES; r++) {
+			tiles[r][c] = new Tile((r+c)%2);
+		}
+	}
 
 	Player player;
 
@@ -47,13 +60,10 @@ int main(int argc, char** argv){
 		SDL_SetRenderDrawColor(ren, 50, 50, 100, 255);
 		SDL_RenderClear(ren);
 
-		for (int c=0; c<viewport_tiles; c++) {
-			for (int r=0; r<viewport_tiles; r++) {
-				if ((c+r) % 2 == 0) {
-					renderTexture(cobble, ren, x_offset + c*tile_width, y_offset + r*tile_width);
-				} else {
-					renderTexture(grass, ren, x_offset + c*tile_width, y_offset + r*tile_width);
-				}
+		for (int c=0; c<VIEWPORT_TILES; c++) {
+			for (int r=0; r<VIEWPORT_TILES; r++) {
+				renderTexture(tile_textures[tiles[r][c]->getTileID()], 
+						ren, x_offset + c*tile_width, y_offset + r*tile_width);
 			}
 		}
 		
@@ -102,9 +112,9 @@ void updateDisplay(SDL_Window* win) {
 	SDL_SetWindowSize(win, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SDL_Surface* surface = SDL_GetWindowSurface(win);
-	tile_width = std::min(surface->w, surface->h) / viewport_tiles;
+	tile_width = std::min(surface->w, surface->h) / VIEWPORT_TILES;
 
-	viewport_size = tile_width * viewport_tiles;
+	viewport_size = tile_width * VIEWPORT_TILES;
 
 	x_offset = (surface->w - viewport_size) / 2;
 	y_offset = (surface->h - viewport_size) / 2;
