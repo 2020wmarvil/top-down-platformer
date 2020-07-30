@@ -31,14 +31,16 @@ int main(int argc, char** argv){
 
 	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	SDL_Texture *grass = loadTexture(resource_path + "grass_tile.png", ren);
-	SDL_Texture *cobble = loadTexture(resource_path + "cobble_tile.png", ren);
+	SDL_Texture *background = loadTexture(resource_path + "default_tile.png", ren);
 	SDL_Texture *spritesheet = loadTexture(resource_path + "npc_spritesheet.png", ren);	
+
+	int bW, bH;
+	SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
 
 	Player player;
 
 	SDL_Event event;
-	EventHandler handler(&player);
+	EventHandler handler;
 	while (!exit_game_loop){
 		while (SDL_PollEvent(&event)){
 			exit_game_loop = handler.handleEvent(event);
@@ -49,11 +51,7 @@ int main(int argc, char** argv){
 
 		for (int c=0; c<viewport_tiles; c++) {
 			for (int r=0; r<viewport_tiles; r++) {
-				if ((c+r) % 2 == 0) {
-					renderTexture(cobble, ren, x_offset + c*tile_width, y_offset + r*tile_width);
-				} else {
-					renderTexture(grass, ren, x_offset + c*tile_width, y_offset + r*tile_width);
-				}
+				renderTexture(background, ren, x_offset + c*tile_width, y_offset + r*tile_width);
 			}
 		}
 		
@@ -67,7 +65,9 @@ int main(int argc, char** argv){
 		player_clip.y = (sprite / sprite_rows) * sprite_size;
 		player_clip.w = sprite_size; player_clip.h = sprite_size;
 
-		renderTexture(spritesheet, ren, x_offset + player.getX() * tile_width, 
+		renderTexture(spritesheet, ren, /*x_offset + (viewport_size / 2) - (tile_width / 2), 
+					        y_offset + (viewport_size / 2) - (tile_width / 2), */
+						x_offset + player.getX() * tile_width, 
 						y_offset + player.getY() * tile_width,
 						&player_clip);
 		SDL_RenderPresent(ren);
