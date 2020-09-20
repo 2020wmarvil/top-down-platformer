@@ -1,3 +1,5 @@
+#define VIEWPORT_TILES 15
+
 #include <iostream>
 
 #include <SDL2/SDL.h>
@@ -7,8 +9,7 @@
 #include "event_handler.h"
 #include "player.h"
 #include "tile.h"
-
-#define VIEWPORT_TILES 11
+#include "level.h"
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 bool exit_game_loop = false;
@@ -41,10 +42,11 @@ int main(int argc, char** argv){
 
 	SDL_Texture *spritesheet = loadTexture(resource_path + "npc_spritesheet.png", ren);
 
-	Tile *tiles[VIEWPORT_TILES][VIEWPORT_TILES];
+	// LOAD TILE ARRAY
+	Level level;
 	for (int c=0; c<VIEWPORT_TILES; c++) {
 		for (int r=0; r<VIEWPORT_TILES; r++) {
-			tiles[r][c] = new Tile((r+c)%2);
+			level.setTile(r, c, new Tile((r+c) % 2));
 		}
 	}
 
@@ -62,7 +64,7 @@ int main(int argc, char** argv){
 
 		for (int c=0; c<VIEWPORT_TILES; c++) {
 			for (int r=0; r<VIEWPORT_TILES; r++) {
-				renderTexture(tile_textures[tiles[r][c]->getTileID()], 
+				renderTexture(tile_textures[level.getTile(r, c).getTileID()], 
 						ren, x_offset + c*tile_width, y_offset + r*tile_width);
 			}
 		}

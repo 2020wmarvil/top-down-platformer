@@ -7,5 +7,5 @@ public:
 	Tile(int tile_id) { this->tile_id = tile_id; }
 	~Tile() {}
 
-	int getTileID() { return tile_id; }
+	int getTileID() const { return tile_id; }
 };
