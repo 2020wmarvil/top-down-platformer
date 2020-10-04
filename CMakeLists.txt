@@ -21,7 +21,7 @@ endif()
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
+find_package(SDL2_IMAGE REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} include)
 
