@@ -101,7 +101,7 @@ int main(int argc, char** argv){
 		SDL_RenderPresent(ren);
 
 		std::string error;
-		if ((string error=SDL_GetError()) != "") { std::cout << error << std::endl; }
+		if ((error=SDL_GetError()) != "") { std::cout << error << std::endl; }
 	}
 
 	SDL_Quit();

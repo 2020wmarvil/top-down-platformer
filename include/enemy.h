@@ -27,9 +27,7 @@ public:
 		if (del_x != 0) dx = (del_x) / (int)abs(del_x);
 		if (del_y != 0) dy = (del_y) / (int)abs(del_y);
 
-		std::cout << dx << " " << dy << std::endl;
-
-		if (abs(del_x) > abs(del_y)) {
+		if (abs(del_x) >= abs(del_y)) {
 			target_x = this->x + dx;
 			setX(target_x);
 		} else {
