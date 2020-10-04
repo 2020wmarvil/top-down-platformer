@@ -27,7 +27,6 @@ void updateDisplay(SDL_Window* win);
 
 Uint32 enemyPathing(Uint32 interval, void *params);
 
-
 int main(int argc, char** argv){
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	IMG_Init(IMG_INIT_PNG);
@@ -36,7 +35,9 @@ int main(int argc, char** argv){
 
 	updateDisplay(win);
 
-	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	SDL_Renderer *ren = SDL_GetRenderer(win); 
+
+	std::cout << SDL_GetError() << std::endl;
 
 	SDL_Texture *tile_textures[] = { 
 		loadTexture(resource_path + "grass_tile.png", ren),
