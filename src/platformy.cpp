@@ -8,6 +8,7 @@
 #include "res_path.h"
 #include "event_handler.h"
 #include "player.h"
+#include "enemy.h"
 #include "tile.h"
 #include "level.h"
 
@@ -24,8 +25,11 @@ SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren);
 void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *clip=nullptr);
 void updateDisplay(SDL_Window* win);
 
+Uint32 enemyPathing(Uint32 interval, void *params);
+
+
 int main(int argc, char** argv){
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	IMG_Init(IMG_INIT_PNG);
 
 	SDL_Window *win = SDL_CreateWindow("Platformy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, win_flags);
@@ -41,6 +45,7 @@ int main(int argc, char** argv){
 	};
 
 	SDL_Texture *spritesheet = loadTexture(resource_path + "npc_spritesheet.png", ren);
+	SDL_Texture *enemy_sprite = loadTexture(resource_path + "gary.png", ren);
 
 	// LOAD TILE ARRAY
 	Level level;
@@ -51,6 +56,9 @@ int main(int argc, char** argv){
 	}
 
 	Player player;
+	Enemy enemy(&player);
+
+	SDL_TimerID enemy_pathing_timer = SDL_AddTimer(1000, enemyPathing, &enemy);
 
 	SDL_Event event;
 	EventHandler handler(&player);
@@ -82,6 +90,15 @@ int main(int argc, char** argv){
 		renderTexture(spritesheet, ren, x_offset + player.getX() * tile_width, 
 						y_offset + player.getY() * tile_width,
 						&player_clip);
+
+		SDL_Rect enemy_clip;
+
+		enemy_clip.x = 0; enemy_clip.y = 0;
+		enemy_clip.w = sprite_size; enemy_clip.h = sprite_size;
+		renderTexture(enemy_sprite, ren, x_offset + enemy.getX() * tile_width, 
+						y_offset + enemy.getY() * tile_width,
+						&enemy_clip);
+
 		SDL_RenderPresent(ren);
 	}
 
@@ -120,4 +137,10 @@ void updateDisplay(SDL_Window* win) {
 
 	x_offset = (surface->w - viewport_size) / 2;
 	y_offset = (surface->h - viewport_size) / 2;
+}
+
+Uint32 enemyPathing(Uint32 interval, void *params) {
+	((Enemy*)params)->path();
+
+	return interval;
 }

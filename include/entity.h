@@ -1,7 +1,7 @@
 #pragma once
 
 class Entity {
-private:
+protected:
 	int x, y, id, sprite;
 public:
 	Entity() : x(0), y(0), sprite(0) {}
