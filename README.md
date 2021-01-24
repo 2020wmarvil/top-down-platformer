@@ -1,6 +1,8 @@
 # top-down-platformer
 
-To build and run the program:
+A 2D top down RPG platformer. 
+
+To build and run:
 - `$ mkdir build && cd build`
 - `$ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../`
 - `$ make`
@@ -8,3 +10,6 @@ To build and run the program:
 
 To build to the bin dir:
 - `$ make install`
+
+![image](https://i.imgur.com/cRVYh9x.png)
+
