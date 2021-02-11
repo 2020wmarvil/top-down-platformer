@@ -12,7 +12,7 @@
 #include "tile.h"
 #include "level.h"
 
-int SCREEN_WIDTH, SCREEN_HEIGHT;
+int SCREEN_WIDTH=640, SCREEN_HEIGHT=480;
 bool exit_game_loop = false;
 
 int tile_width, viewport_size, x_offset, y_offset;
@@ -35,9 +35,10 @@ int main(int argc, char** argv){
 
 	updateDisplay(win);
 
-	SDL_Renderer *ren = SDL_GetRenderer(win); 
+	SDL_Renderer *ren = SDL_GetRenderer(win);
+	if(!ren) ren = SDL_CreateRenderer(win, -1, 0);
 
-	SDL_Texture *tile_textures[] = { 
+	SDL_Texture *tile_textures[] = {
 		loadTexture(resource_path + "grass_tile.png", ren),
 		loadTexture(resource_path + "sand_tile.png", ren),
 		loadTexture(resource_path + "cobble_tile.png", ren)
@@ -71,11 +72,11 @@ int main(int argc, char** argv){
 
 		for (int c=0; c<VIEWPORT_TILES; c++) {
 			for (int r=0; r<VIEWPORT_TILES; r++) {
-				renderTexture(tile_textures[level.getTile(r, c).getTileID()], 
+				renderTexture(tile_textures[level.getTile(r, c).getTileID()],
 						ren, x_offset + c*tile_width, y_offset + r*tile_width);
 			}
 		}
-		
+
 		int sprite_cols = 4, sprite_rows = 4, sprite_size = 16;
 		//int sprite = (SDL_GetTicks() / 500) % (sprite_cols*sprite_rows);
 		int sprite = player.getSprite();
@@ -86,7 +87,7 @@ int main(int argc, char** argv){
 		player_clip.y = (sprite / sprite_rows) * sprite_size;
 		player_clip.w = sprite_size; player_clip.h = sprite_size;
 
-		renderTexture(spritesheet, ren, x_offset + player.getX() * tile_width, 
+		renderTexture(spritesheet, ren, x_offset + player.getX() * tile_width,
 						y_offset + player.getY() * tile_width,
 						&player_clip);
 
@@ -94,7 +95,7 @@ int main(int argc, char** argv){
 
 		enemy_clip.x = 0; enemy_clip.y = 0;
 		enemy_clip.w = sprite_size; enemy_clip.h = sprite_size;
-		renderTexture(enemy_sprite, ren, x_offset + enemy.getX() * tile_width, 
+		renderTexture(enemy_sprite, ren, x_offset + enemy.getX() * tile_width,
 						y_offset + enemy.getY() * tile_width,
 						&enemy_clip);
 

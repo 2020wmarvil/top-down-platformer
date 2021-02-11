@@ -8,7 +8,7 @@
 
 #include "tile.h"
 
-class Square { 
+class Square {
 public:
 	Tile *tile;
 	Entity * entity;
