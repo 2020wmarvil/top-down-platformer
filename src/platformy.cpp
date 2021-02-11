@@ -27,6 +27,8 @@ void updateDisplay(SDL_Window* win);
 
 Uint32 enemyPathing(Uint32 interval, void *params);
 
+Level level;
+
 int main(int argc, char** argv){
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
 	IMG_Init(IMG_INIT_PNG);
@@ -48,7 +50,6 @@ int main(int argc, char** argv){
 	SDL_Texture *enemy_sprite = loadTexture(resource_path + "gary.png", ren);
 
 	// LOAD TILE ARRAY
-	Level level;
 	for (int c=0; c<VIEWPORT_TILES; c++) {
 		for (int r=0; r<VIEWPORT_TILES; r++) {
 			level.setTile(r, c, new Tile((r+c) % 2));
