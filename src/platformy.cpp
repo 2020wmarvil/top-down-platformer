@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 
+#include "enemy_manager.h"
 #include "res_path.h"
 #include "event_handler.h"
 #include "player.h"

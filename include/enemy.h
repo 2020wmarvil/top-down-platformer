@@ -42,4 +42,10 @@ public:
 			exit(1);
 		}
 	}
+
+	// void onTick(Player& p) {
+	// 	// iterate over every enemy
+	// 		// take into account the game state and update each state machine
+//
+	// }
 };
